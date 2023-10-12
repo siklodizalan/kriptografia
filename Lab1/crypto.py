@@ -4,12 +4,13 @@ File: crypto.py
 ---------------
 Assignment 1: Cryptography
 Course: CS 41
-Name: <YOUR NAME>
-SUNet: <SUNet ID>
+Name: SIKLODI ZALAN
+SUNet: szim2180
 
 Replace this with a description of the program.
 """
 import utils
+
 
 # Caesar Cipher
 
@@ -18,7 +19,15 @@ def encrypt_caesar(plaintext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    offset = 3
+    ciphertext = ''
+    A = ord('A')
+    for c in plaintext:
+        if c.isalpha():
+            ciphertext += chr((ord(c) - A + offset) % 26 + A)
+        else:
+            ciphertext += c
+    return ciphertext
 
 
 def decrypt_caesar(ciphertext):
@@ -26,7 +35,15 @@ def decrypt_caesar(ciphertext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    offset = 3
+    plaintext = ''
+    A = ord('A')
+    for c in ciphertext:
+        if c.isalpha():
+            plaintext += chr((ord(c) - A - offset) % 26 + A)
+        else:
+            plaintext += c
+    return plaintext
 
 
 # Vigenere Cipher
@@ -36,7 +53,7 @@ def encrypt_vigenere(plaintext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    
 
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -44,7 +61,7 @@ def decrypt_vigenere(ciphertext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    # raise NotImplementedError  # Your implementation here
 
 
 # Merkle-Hellman Knapsack Cryptosystem
@@ -69,7 +86,7 @@ def generate_private_key(n=8):
 
     @return 3-tuple `(w, q, r)`, with `w` a n-tuple, and q and r ints.
     """
-    raise NotImplementedError  # Your implementation here
+    # raise NotImplementedError  # Your implementation here
 
 def create_public_key(private_key):
     """Create a public key corresponding to the given private key.
@@ -85,7 +102,7 @@ def create_public_key(private_key):
 
     @return n-tuple public key
     """
-    raise NotImplementedError  # Your implementation here
+    # raise NotImplementedError  # Your implementation here
 
 
 def encrypt_mh(message, public_key):
@@ -106,7 +123,7 @@ def encrypt_mh(message, public_key):
 
     @return list of ints representing encrypted bytes
     """
-    raise NotImplementedError  # Your implementation here
+    # raise NotImplementedError  # Your implementation here
 
 def decrypt_mh(message, private_key):
     """Decrypt an incoming message using a private key
@@ -126,5 +143,5 @@ def decrypt_mh(message, private_key):
 
     @return bytearray or str of decrypted characters
     """
-    raise NotImplementedError  # Your implementation here
+    # raise NotImplementedError  # Your implementation here
 
