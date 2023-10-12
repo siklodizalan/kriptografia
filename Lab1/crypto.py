@@ -48,12 +48,20 @@ def decrypt_caesar(ciphertext):
 
 # Vigenere Cipher
 
+def repeat_to_length(string, length):
+    return (string * (length//len(string) + 1))[:length]
+
 def encrypt_vigenere(plaintext, keyword):
     """Encrypt plaintext using a Vigenere cipher with a keyword.
 
     Add more implementation details here.
     """
-    
+    keyword = repeat_to_length(keyword, len(plaintext))
+    ciphertext = ''
+    A = ord('A')
+    for (c, offset) in zip(plaintext, keyword):
+        ciphertext += chr((ord(c) + ord(offset) - 2 * A) % 26 + A)
+    return ciphertext
 
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -61,7 +69,12 @@ def decrypt_vigenere(ciphertext, keyword):
 
     Add more implementation details here.
     """
-    # raise NotImplementedError  # Your implementation here
+    keyword = repeat_to_length(keyword, len(ciphertext))
+    plaintext = ''
+    A = ord('A')
+    for (c, offset) in zip(ciphertext, keyword):
+            plaintext += chr((ord(c) - ord(offset) - 2 * A) % 26 + A)
+    return plaintext
 
 
 # Merkle-Hellman Knapsack Cryptosystem
