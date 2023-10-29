@@ -11,6 +11,8 @@ import random
 
 from crypto import (encrypt_caesar, decrypt_caesar,
                     encrypt_vigenere, decrypt_vigenere,
+                    encrypt_scytale, decrypt_scytale,
+                    encrypt_railfence, decrypt_railfence,
                     generate_private_key, create_public_key,
                     encrypt_mh, decrypt_mh)
 
@@ -21,7 +23,7 @@ from crypto import (encrypt_caesar, decrypt_caesar,
 
 def get_tool():
     print("* Tool *")
-    return _get_selection("(C)aesar, (V)igenere or (M)erkle-Hellman? ", "CVM")
+    return _get_selection("(C)aesar, (V)igenere, (S)cytale, (R)ailfence or (M)erkle-Hellman? ", "CVSRM")
 
 
 def get_action():
@@ -94,6 +96,13 @@ def get_yes_or_no(prompt, reprompt=None):
     return choice[0] == 'Y'
 
 
+def get_integer(prompt):
+    integer = input("{} = ".format(prompt))
+    while not integer.isdigit():
+        integer = input("Please enter an integer as expected. {} = ".format(prompt))
+    return int(integer)
+
+
 def clean_caesar(text):
     """Convert text to a form compatible with the preconditions imposed by Caesar cipher"""
     return text.upper()
@@ -161,6 +170,38 @@ def run_merkle_hellman():
     set_output(output)
 
 
+def run_scytale():
+    action = get_action()
+    encrypting = action == 'E'
+    data = get_input(binary=False)
+
+    print("* Transform *")
+    circumference = get_integer("Circumference number")
+
+    print("{}crypting {} using Scytale cipher and circumference number {}...".format('En' if encrypting else 'De', data, circumference))
+
+    output = (encrypt_scytale if encrypting else decrypt_scytale)(data, circumference)
+
+    set_output(output)
+
+
+def run_railfence():
+    action = get_action()
+    encrypting = action == 'E'
+
+    binary = get_yes_or_no('Is input binary? ')
+    data = get_input(binary)
+
+    print("* Transform *")
+    rails = get_integer("Number of rails")
+
+    print("{}crypting {} using Railfence cipher and rail number {}...".format('En' if encrypting else 'De', data, rails))
+
+    output = (encrypt_railfence if encrypting else decrypt_railfence)(data, rails, binary)
+
+    set_output(output, binary)
+
+
 def run_suite():
     """
     Runs a single iteration of the cryptography suite.
@@ -175,7 +216,9 @@ def run_suite():
     commands = {
         'C': run_caesar,         # Caesar Cipher
         'V': run_vigenere,       # Vigenere Cipher
-        'M': run_merkle_hellman  # Merkle-Hellman Knapsack Cryptosystem
+        'M': run_merkle_hellman, # Merkle-Hellman Knapsack Cryptosystem
+        'S': run_scytale,        # Scytale Cipher
+        'R': run_railfence       # Railfence Cipher
     }
     commands[tool]()
 

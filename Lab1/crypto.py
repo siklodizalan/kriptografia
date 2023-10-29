@@ -9,7 +9,6 @@ SUNet: szim2180
 
 Replace this with a description of the program.
 """
-import utils
 
 
 # Caesar Cipher
@@ -75,6 +74,97 @@ def decrypt_vigenere(ciphertext, keyword):
     for (c, offset) in zip(ciphertext, keyword):
             plaintext += chr((ord(c) - ord(offset) - 2 * A) % 26 + A)
     return plaintext
+
+
+# Scytale Cipher
+
+def encrypt_scytale(plaintext, circumference):
+    """Encrypt plaintext using a Scytale cipher with a keyword.
+
+    Add more implementation details here.
+    """
+    ciphertext = ''
+    for i in range(circumference):
+        ciphertext += ''.join(plaintext[i::circumference])
+    return ciphertext
+
+
+def decrypt_scytale(ciphertext, circumference):
+    """Decrypt ciphertext using a Scytale cipher with a keyword.
+
+    Add more implementation details here.
+    """
+    plaintext = ''
+    length = len(ciphertext)
+    whole_seq_nr = length // circumference
+
+    if length % circumference == 0:
+        for i in range(whole_seq_nr):
+            plaintext += ''.join(ciphertext[i::whole_seq_nr])
+    else:
+        whole_row_nr = length - whole_seq_nr * circumference
+        seq_nr = whole_seq_nr + 1
+        whole_rows = ciphertext[:seq_nr*whole_row_nr]
+        trunc_rows = ciphertext[seq_nr*whole_row_nr:]
+        for i in range(whole_seq_nr):
+            plaintext += ''.join(whole_rows[i::seq_nr])
+            plaintext += ''.join(trunc_rows[i::whole_seq_nr])
+        plaintext += ''.join(whole_rows[whole_seq_nr::seq_nr])
+
+    return plaintext
+
+
+# Railfence Cipher
+
+def encrypt_railfence(plaintext, nr_rails, binary):
+    low_rail_index = nr_rails - 1
+    step = low_rail_index * 2
+
+    ciphertext = plaintext[::step]
+    for rail_i in range(1, low_rail_index):
+        odd_chars = plaintext[rail_i::step]
+        even_chars = plaintext[step - rail_i::step]
+        merged_chars = [None]*(len(odd_chars) + len(even_chars))
+        merged_chars[0::2] = odd_chars
+        merged_chars[1::2] = even_chars
+        ciphertext += (bytes(merged_chars) if binary else''.join(merged_chars))
+    ciphertext += plaintext[low_rail_index::step]
+
+    return ciphertext
+
+def decrypt_railfence(ciphertext, nr_rails, binary):
+    length = len(ciphertext)
+    segment_length = nr_rails - 1
+    step = 2 * segment_length
+    segment_nr = length // segment_length
+    back_n_forth_segment_nr = segment_nr // 2
+    truncated_segment_length = length % (segment_length * 2)
+
+    plaintext = [None]*length
+
+    processed_length = back_n_forth_segment_nr
+    if truncated_segment_length > 0:
+        processed_length += 1
+    plaintext[::step] = ciphertext[:processed_length]
+
+    for rail_i in range(1, segment_length):
+        if truncated_segment_length <= rail_i:
+            rail_length = 2 * back_n_forth_segment_nr
+        elif truncated_segment_length <= 2 * segment_length - rail_i:
+            rail_length = 2 * back_n_forth_segment_nr + 1
+        else:
+            rail_length = 2 * back_n_forth_segment_nr + 2
+        rail = ciphertext[processed_length:processed_length+rail_length]
+        processed_length += rail_length
+
+        odd_chars = rail[0::2]
+        even_chars = rail[1::2]
+        plaintext[rail_i::step] = odd_chars
+        plaintext[step-rail_i::step] = even_chars
+
+    plaintext[segment_length::step] = ciphertext[processed_length:]
+
+    return bytes(plaintext) if binary else ''.join(plaintext)
 
 
 # Merkle-Hellman Knapsack Cryptosystem
