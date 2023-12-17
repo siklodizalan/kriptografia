@@ -1,8 +1,11 @@
-from generators.PseudoRandomGenerator import PseudoRandomGenerator
+from src.generators.pseudo_random_generator import PseudoRandomGenerator
+from collections import Counter
 
 
 class Solitaire(PseudoRandomGenerator):
     def __init__(self, seed: list[int]) -> None:
+        if (Counter(seed) != Counter([*range(1, 55)])):
+            raise Exception("Invalid seed")
         self.seed = seed.copy()
         self.initial_seed = seed.copy()
 
@@ -26,7 +29,7 @@ class Solitaire(PseudoRandomGenerator):
             b_joker = self.seed.index(54)
             if b_joker == pack_size - 2:
                 self.seed[1], self.seed[2:] = self.seed[b_joker], self.seed[1:b_joker] + \
-                    self.seed[b_joker:]
+                    self.seed[b_joker+1:]
                 b_joker = 1
             elif b_joker == pack_size - 1:
                 self.seed[2], self.seed[3:] = self.seed[b_joker], self.seed[2:b_joker]

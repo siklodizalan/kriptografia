@@ -2,14 +2,17 @@
 """
 Mathematical utilities for CS41's Assignment 1: Cryptography.
 """
-import fractions as _fractions
+from math import gcd
+
 
 class Error(Exception):
     """Base class for exceptions in this module."""
 
+
 class BinaryConversionError(Error):
     """Custom exception for invalid binary conversions."""
     pass
+
 
 def is_superincreasing(seq):
     """Return whether a given sequence is superincreasing."""
@@ -40,7 +43,7 @@ def modinv(a, b):
 
 def coprime(a, b):
     """Returns True iff `gcd(a, b) == 1`, i.e. iff `a` and `b` are coprime"""
-    return _fractions.gcd(a, b) == 1
+    return gcd(a, b) == 1
 
 
 def byte_to_bits(byte):
